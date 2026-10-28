@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a1315">
+<meta name="robots" content="noindex,nofollow">
+<title>Incoming transmission</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0a1315; --panel:#112123; --line:#27403f; --text:#f1f6ef; --dim:#9fb5ae;
+  --fly:#e8ff70; --coral:#ff7a6b; --teal:#43e0c8;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--text);
+  font-family:"Space Mono",ui-monospace,Menlo,Consolas,monospace;font-size:15px;line-height:1.5;
+  background-image:radial-gradient(circle at 50% -8%,#14403f 0,transparent 55%)}
+h1,.hd{font-family:"Chakra Petch","Trebuchet MS",system-ui,sans-serif}
+
+/* boot */
+#boot{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:24px;z-index:7;clip-path:circle(150% at 50% 45%);transition:clip-path .9s cubic-bezier(.7,0,.3,1)}
+#boot::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 4px);pointer-events:none}
+#boot.off{clip-path:circle(0% at 50% 45%);pointer-events:none}
+#bootlines{color:var(--fly);max-width:420px;margin:0 auto;width:100%;min-height:10em}
+#bootlines p{margin:0 0 .5em;animation:ty .35s steps(8) both}
+@keyframes ty{from{opacity:0;transform:translateX(-8px)}}
+.bar{max-width:420px;margin:10px auto 0;width:100%;height:6px;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--coral),var(--fly),var(--teal));animation:load 8.6s linear forwards}
+@keyframes load{to{width:100%}}
+
+main{max-width:460px;margin:0 auto;padding:30px 20px 24px;position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;min-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
+.stage{flex:1}
+
+/* background */
+#bg{position:fixed;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
+.gear{position:absolute;color:var(--line);opacity:.7;animation:spin 40s linear infinite}
+.g1{width:150px;top:-40px;left:-44px}
+.g2{width:100px;bottom:16%;right:-34px;animation-direction:reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mini{position:absolute;width:44px;color:var(--teal);opacity:.3;animation:bob 6s ease-in-out infinite}
+.b1{left:3%;top:62%}
+.b2{right:4%;top:24%;animation-delay:-3s}
+@keyframes bob{50%{transform:translateY(-14px) rotate(4deg)}}
+.trace{position:absolute;left:0;bottom:0;width:100%;height:120px;opacity:.75}
+.trace path{fill:none;stroke:var(--line);stroke-width:2;vector-effect:non-scaling-stroke}
+.trace .p1{stroke:var(--coral);stroke-dasharray:30 400;animation:run 6s linear infinite}
+.trace .p2{stroke:var(--teal);stroke-dasharray:24 400;animation:run 5s linear infinite -2s}
+@keyframes run{to{stroke-dashoffset:-430}}
+
+/* scenes and transitions */
+.rv{opacity:0;transform:translateY(18px)}
+.scene{display:none}
+.scene.on{display:block}
+.scene.on .rv,.in .foot.rv{animation:rv .7s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i,0)*.12s + .1s)}
+.in .foot.rv{animation-delay:1.2s}
+@keyframes rv{to{opacity:1;transform:none}}
+.scene.on .stamp{animation:stamp .6s cubic-bezier(.2,1.6,.4,1) forwards;animation-delay:calc(var(--i,0)*.12s + .1s)}
+.stamp{transform:scale(1.35) rotate(-4deg)}
+@keyframes stamp{to{opacity:1;transform:none}}
+.scene.out{animation:out .42s ease forwards}
+@keyframes out{to{opacity:0;transform:translateY(-16px) scale(.97);filter:blur(5px)}}
+
+/* robot */
+.robowrap{margin:26px auto 0;width:176px;transform-origin:top center;transition:transform .7s cubic-bezier(.3,1.3,.5,1),margin .7s ease}
+.robowrap.small{transform:scale(.62);margin-bottom:-66px}
+.robo{position:relative;opacity:0}
+.in .robo{opacity:1;animation:drop .9s cubic-bezier(.3,1.5,.5,1) .2s both,float 5s ease-in-out 1.1s infinite}
+@keyframes drop{from{opacity:0;transform:translateY(-90px) scale(.8)}to{opacity:1;transform:none}}
+@keyframes float{from,to{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes jump{0%{transform:none}30%{transform:translateY(-38px) rotate(-7deg)}60%{transform:translateY(0) rotate(5deg)}80%{transform:translateY(-10px)}100%{transform:none}}
+.ant{position:absolute;left:50%;top:-24px;width:4px;height:24px;background:#c7d5cf;transform:translateX(-50%)}
+.ant::after{content:"";position:absolute;left:-5px;top:-11px;width:14px;height:14px;border-radius:50%;background:var(--fly);box-shadow:0 0 16px 4px rgba(232,255,112,.6);animation:glow 2.4s ease-in-out infinite}
+@keyframes glow{50%{opacity:.45}}
+.head{position:relative;background:linear-gradient(#fcfefc,#d9e5df);border-radius:48px;padding:15px;box-shadow:0 12px 30px rgba(0,0,0,.45),0 0 44px rgba(232,255,112,.12);transition:transform .3s}
+.ear{position:absolute;top:40%;width:14px;height:34px;border-radius:8px;background:var(--coral)}
+.ear.l{left:-9px}.ear.r{right:-9px}
+.screen{position:relative;background:#081012;border-radius:36px;height:116px;overflow:hidden;box-shadow:inset 0 0 0 3px #243a39}
+.eyes{position:absolute;left:0;right:0;top:32px;display:flex;justify-content:center;gap:28px;transition:translate .15s}
+.eye{display:block;position:relative;width:24px;height:32px;border-radius:50%;background:var(--fly);box-shadow:0 0 14px var(--fly);animation:blink 5s infinite;transition:height .2s,width .2s,scale .2s}
+.eye::after{content:"";position:absolute;top:5px;left:6px;width:7px;height:7px;border-radius:50%;background:#fff;opacity:.85}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.mouth{position:absolute;left:50%;top:78px;width:22px;height:11px;border-bottom:4px solid var(--fly);border-radius:0 0 22px 22px;transform:translateX(-50%);transition:all .2s}
+.cheek{position:absolute;top:70px;width:22px;height:11px;border-radius:50%;background:var(--coral);opacity:.25;filter:blur(2px);transition:opacity .3s}
+.cheek.l{left:20px}.cheek.r{right:20px}
+.curious .head{transform:rotate(-5deg)}
+.curious .eye:first-child{scale:1.2}
+.curious .eye:last-child{scale:.8}
+.wink .eye:last-child{height:6px;border-radius:6px;animation:none}
+.wink .eye:last-child::after{display:none}
+.happy .eye{width:26px;height:15px;background:transparent;border-top:6px solid var(--fly);border-radius:30px 30px 0 0;box-shadow:none;filter:drop-shadow(0 0 6px var(--fly));animation:none}
+.happy .eye::after{display:none}
+.happy .cheek{opacity:.9}
+.happy .mouth{width:30px;height:15px;background:var(--fly);border:0;border-radius:0 0 30px 30px;top:74px}
+
+.say{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 18px;margin:24px auto 22px;max-width:300px;text-align:center;color:var(--fly)}
+.say::before{content:"";position:absolute;left:50%;top:-8px;width:14px;height:14px;background:var(--panel);border-left:1px solid var(--line);border-top:1px solid var(--line);transform:translateX(-50%) rotate(45deg)}
+h1{font-size:27px;line-height:1.2;margin:0 0 10px;text-align:center}
+.sub{color:var(--dim);text-align:center;margin:0 0 20px}
+.neon{height:3px;border-radius:3px;background:linear-gradient(90deg,var(--coral),var(--fly),var(--teal));box-shadow:0 0 12px rgba(232,255,112,.35);margin:0 0 22px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:4px 18px;margin-bottom:14px}
+dl{margin:0}
+.row{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.row:last-child{border-bottom:0}
+dt{color:var(--dim)}
+dd{margin:0;text-align:right;color:var(--fly)}
+.uniform{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--coral);border-radius:14px;padding:12px 16px;margin-bottom:6px;font-size:14px}
+.uniform b{font-family:"Chakra Petch",system-ui,sans-serif;font-size:17px;color:var(--coral);display:block;margin-bottom:2px}
+.ask{font-family:"Chakra Petch",system-ui,sans-serif;font-size:21px;text-align:center;margin:44px 0 16px}
+.btns{position:relative;display:flex;gap:12px;justify-content:center;min-height:56px;flex-wrap:wrap}
+.btn{font:700 16px "Chakra Petch",system-ui,sans-serif;border-radius:12px;padding:14px 22px;cursor:pointer;border:2px solid var(--fly);transition:transform .25s,box-shadow .25s}
+.btn:active{transform:scale(.95)}
+.yes{background:var(--fly);color:#1b2600}
+#yes,#view{animation:pulse 2s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(232,255,112,.55)}100%{box-shadow:0 0 0 18px rgba(232,255,112,0)}}
+.no{background:transparent;color:var(--dim);border-color:var(--line);position:relative;z-index:6;transition:transform .45s cubic-bezier(.2,1.2,.4,1)}
+.msg{text-align:center;color:var(--coral);min-height:1.5em;margin:8px 0 0}
+label.q{display:block;font-weight:700;margin-bottom:8px}
+textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;resize:vertical;min-height:84px}
+.send{width:100%;margin-top:12px}
+.fallback{display:none;margin-top:14px;color:var(--dim);font-size:13px;word-break:break-word}
+.foot{margin:auto 0 0;padding-top:22px;font-family:"Chakra Petch",system-ui,sans-serif;font-size:16px;line-height:1.35;text-align:center;color:var(--text)}
+.glow{color:var(--fly);text-shadow:0 0 10px rgba(232,255,112,.8),0 0 22px rgba(232,255,112,.5);animation:glow2 2.4s ease-in-out infinite}
+@keyframes glow2{50%{text-shadow:0 0 4px rgba(232,255,112,.4),0 0 8px rgba(232,255,112,.2)}}
+#toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);z-index:8;transform:translate(-50%,-160%);background:var(--fly);color:#1b2600;font:700 15px "Chakra Petch",system-ui,sans-serif;padding:12px 20px;border-radius:999px;box-shadow:0 8px 30px rgba(232,255,112,.35);transition:transform .55s cubic-bezier(.2,1.5,.4,1);white-space:nowrap}
+#toast.show{transform:translate(-50%,0)}
+.secure{margin:0;text-align:center;font-size:15px;line-height:1.55}
+.secure .dot{display:block;width:10px;height:10px;border-radius:50%;background:var(--teal);margin:0 auto 12px;animation:ping 1.8s ease-out infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(67,224,200,.6)}100%{box-shadow:0 0 0 14px rgba(67,224,200,0)}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){
+  #bg *,.robo,.ant::after,.eye,#yes,#view,.glow{animation:none!important}
+  .rv,.stamp{opacity:1;transform:none;animation:none!important}
+  .robo{opacity:1}
+  #boot,.robowrap{transition:none}
+}
+</style>
+</head>
+<body>
+<div id="boot"><div id="bootlines" aria-live="polite"></div><div class="bar"><i></i></div></div>
+<div id="toast" role="status">Mission accepted. Mission Prep: Initiated.</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="botsym" viewBox="0 0 60 72"><line x1="30" y1="5" x2="30" y2="14" stroke="currentColor" stroke-width="3"/><circle cx="30" cy="4" r="3.5" fill="#e8ff70"/><rect x="8" y="14" width="44" height="32" rx="12" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="21" cy="30" r="4.5" fill="currentColor"/><circle cx="39" cy="30" r="4.5" fill="currentColor"/><rect x="16" y="50" width="28" height="18" rx="6" fill="none" stroke="currentColor" stroke-width="3"/></symbol>
+  <symbol id="gearsym" viewBox="-40 -40 80 80"><circle r="30" fill="none" stroke="currentColor" stroke-width="10" stroke-dasharray="9.4 9.4"/><circle r="24" fill="none" stroke="currentColor" stroke-width="6"/><circle r="8" fill="none" stroke="currentColor" stroke-width="4"/></symbol>
+</svg>
+
+<div id="bg" aria-hidden="true">
+  <svg class="gear g1" viewBox="-40 -40 80 80"><use href="#gearsym"/></svg>
+  <svg class="gear g2" viewBox="-40 -40 80 80"><use href="#gearsym"/></svg>
+  <svg class="mini b1" viewBox="0 0 60 72"><use href="#botsym"/></svg>
+  <svg class="mini b2" viewBox="0 0 60 72"><use href="#botsym"/></svg>
+  <svg class="trace" viewBox="0 0 400 120" preserveAspectRatio="none"><path d="M0 100 H90 L110 80 H220 L240 100 H400"/><path class="p1" pathLength="400" d="M0 100 H90 L110 80 H220 L240 100 H400"/><path d="M0 60 H40 L60 40 H160 L180 60 H400"/><path class="p2" pathLength="400" d="M0 60 H40 L60 40 H160 L180 60 H400"/></svg>
+</div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<main id="page">
+  <div class="robowrap" id="rw">
+    <div class="robo" id="face">
+      <div class="ant"></div>
+      <div class="head">
+        <i class="ear l"></i><i class="ear r"></i>
+        <div class="screen">
+          <div class="eyes" id="eyes"><b class="eye"></b><b class="eye"></b></div>
+          <i class="cheek l"></i><i class="cheek r"></i>
+          <i class="mouth"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <section class="scene" id="s1">
+      <p class="say rv" style="--i:0">Up for some fun this weekend?</p>
+      <h1 class="rv" style="--i:1">Grumpyyyy, you’ve been selected for a new mission by The Princess.</h1>
+      <p class="sub rv" style="--i:2">Reason: Your recent, successful completion of a high-clearance mission. Outstanding work.</p>
+      <div class="neon rv" style="--i:3"></div>
+      <div class="btns rv" style="--i:4"><button class="btn yes" id="view">View Details</button></div>
+    </section>
+
+    <section class="scene" id="s2">
+      <div class="panel rv" style="--i:0"><dl>
+        <div class="row"><dt>Date</dt><dd>Saturday, Oct 31</dd></div>
+        <div class="row"><dt>Location</dt><dd>[Redacted]</dd></div>
+        <div class="row"><dt>Clearance</dt><dd>Just us</dd></div>
+        <div class="row"><dt>Timing</dt><dd>Details to follow</dd></div>
+      </dl></div>
+      <div class="uniform stamp" style="--i:2"><b>Uniform regulations</b>No options here. The captain in charge is particular about the uniform: smart casual, crisp, and ready for inspection.</div>
+      <div class="rv" style="--i:4;position:relative;z-index:6">
+        <p class="ask">Do you accept this mission?</p>
+        <div class="btns">
+          <button class="btn yes" id="yes">Accept mission</button>
+          <button class="btn no" id="no">Decline</button>
+        </div>
+        <p class="msg" id="msg" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="scene" id="s3">
+      <h1 class="rv" style="--i:0">Mission accepted, Grumpyyyy!</h1>
+      <p class="sub rv" style="--i:1">Agents deployed. Preparations underway. Further updates will be transmitted soon.</p>
+      <div class="panel rv" style="--i:2;padding:18px">
+        <p class="secure"><i class="dot"></i>Have something to say before take off or any notes for Mission Control? Use the secure channel on your device for communication.</p>
+        
+        
+        
+      </div>
+    </section>
+  </div>
+
+  <p class="foot rv">Enough butterflies, now it’s time for my <span class="glow">fireflies</span> to shine.</p>
+</main>
+
+<script>
+(function(){
+  var PHONE = "";
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var page = document.getElementById("page");
+  var s1 = document.getElementById("s1"), s2 = document.getElementById("s2"), s3 = document.getElementById("s3");
+
+  /* boot sequence with iris wipe */
+  var lines = ["Initializing...","Scanning database...","4 years of friendship found. Roast level: critical.","Recent mission: completed with distinction.","New mission detected."];
+  var box = document.getElementById("bootlines"), boot = document.getElementById("boot"), i = 0, opened = false;
+  function open(){
+    if(opened) return; opened = true; boot.classList.add("off");
+    setTimeout(function(){ page.classList.add("in"); s1.classList.add("on"); }, 350);
+  }
+  function next(){
+    if(i >= lines.length){ setTimeout(open, 1600); return; }
+    var p = document.createElement("p"); p.textContent = "> " + lines[i++]; box.appendChild(p);
+    setTimeout(next, 1400);
+  }
+  next();
+  boot.addEventListener("click", open);
+
+  function go(a, b){
+    a.classList.add("out");
+    setTimeout(function(){ a.classList.remove("on","out"); b.classList.add("on"); }, 430);
+  }
+
+  /* realistic fireflies on a canvas */
+  var cv = document.getElementById("fx"), ctx = cv.getContext("2d"), W = 0, H = 0, flies = [];
+  function size(){
+    var d = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = W * d; cv.height = H * d; ctx.setTransform(d,0,0,d,0,0);
+  }
+  size(); window.addEventListener("resize", size);
+  function mk(b, x, y){
+    return {
+      x: x != null ? x : Math.random()*W,
+      y: y != null ? y : (b ? H + 10 : H*(.2 + Math.random()*.8)),
+      ang: b ? -1.57 + (Math.random()-.5)*1.2 : Math.random()*6.28,
+      spd: b ? .5 + Math.random()*.5 : .12 + Math.random()*.22,
+      t: b ? Math.random()*.2 : Math.random()*8,
+      period: b ? 2.4 : 3.5 + Math.random()*4,
+      size: 1.1 + Math.random()*1.3, b: b, age: 0,
+      life: b ? 9 + Math.random()*5 : 1e9, seed: Math.random()*10
+    };
+  }
+  for(var n = 0; n < 22; n++) flies.push(mk(false));
+  function burst(count, x, y){ for(var k = 0; k < count; k++) flies.push(mk(true, x != null ? x + (Math.random()-.5)*40 : null, y != null ? y + (Math.random()-.5)*40 : null)); }
+  var last = 0;
+  function tick(ts){
+    var dt = Math.min((ts - last)/1000, .05); last = ts;
+    ctx.clearRect(0,0,W,H); ctx.globalCompositeOperation = "lighter";
+    for(var k = flies.length - 1; k >= 0; k--){
+      var f = flies[k];
+      f.t += dt; f.age += dt;
+      f.ang += (Math.sin(f.t*.8 + f.seed)*.9 + Math.sin(f.t*2.3 + f.seed*2)*.5)*dt;
+      f.x += Math.cos(f.ang)*f.spd*60*dt; f.y += Math.sin(f.ang)*f.spd*60*dt;
+      if(f.b){ f.y -= 12*dt; if(f.age > f.life){ flies.splice(k,1); continue; } }
+      else { if(f.x < -30) f.x = W + 30; if(f.x > W + 30) f.x = -30; if(f.y < -30) f.y = H + 30; if(f.y > H + 30) f.y = -30; }
+      var ph = (f.t % f.period)/f.period;
+      var I = ph < .3 ? Math.pow(Math.sin(ph/.3*Math.PI), 2) : 0;
+      I = Math.max(I, .05) * (f.b ? Math.min(1, f.age/1.2, (f.life - f.age)/2.5) : .85);
+      if(I <= 0.01) continue;
+      var R = f.size*(5 + 14*I), g = ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,R);
+      g.addColorStop(0, "rgba(238,255,160," + (.95*I) + ")");
+      g.addColorStop(.25, "rgba(190,255,70," + (.42*I) + ")");
+      g.addColorStop(1, "rgba(150,255,40,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(f.x,f.y,R,0,6.283); ctx.fill();
+      ctx.fillStyle = "rgba(250,255,200," + I + ")"; ctx.beginPath(); ctx.arc(f.x,f.y,f.size*.7,0,6.283); ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+  if(!reduce) requestAnimationFrame(tick);
+
+  /* robot expressions */
+  var face = document.getElementById("face"), rw = document.getElementById("rw"), eyes = document.getElementById("eyes"), happy = false;
+  var moods = ["curious","wink","","curious","",""];
+  function setMood(m){ if(!happy) face.className = "robo " + m; }
+  setInterval(function(){ setMood(moods[Math.floor(Math.random()*moods.length)]); }, 2600);
+  window.addEventListener("pointermove", function(e){
+    if(happy) return;
+    var r = face.getBoundingClientRect();
+    var dx = (e.clientX - (r.left + r.width/2))/window.innerWidth, dy = (e.clientY - (r.top + r.height/2))/window.innerHeight;
+    eyes.style.translate = (dx*24) + "px " + (dy*14) + "px";
+  });
+  face.addEventListener("click", function(){
+    setMood("wink");
+    if(!reduce){ var r = face.getBoundingClientRect(); burst(5, r.left + r.width/2, r.top + 20); }
+  });
+
+  /* scene 1 to scene 2 */
+  var view = document.getElementById("view");
+  view.addEventListener("click", function(){
+    if(!reduce){ var r = view.getBoundingClientRect(); burst(8, r.left + r.width/2, r.top); }
+    rw.classList.add("small");
+    go(s1, s2);
+  });
+
+  /* decline button dodges, with a shuffled deck of quips */
+  var no = document.getElementById("no"), msg = document.getElementById("msg");
+  var nopes = ["Error: Choice unavailable.","Nice try.","Oh, like you had a choice.","Brave of you to try.","I see… trying to be smart, huh?","That button is for decoration only.","Have you considered saying yes? Coz that’s the only option that works.","Bold of you to assume that was a choice.","This button has been disconnected.","Plot twist: You can’t decline.","Nice reflexes. Still no.","Declining requires clearance you don’t have.","Is that your final answer? It shouldn’t be.","Nope. The button saw you coming.","Your request has been lost in the mail."];
+  var bag = [], lastQ = "", lastT = 0;
+  function quip(){
+    var now = Date.now(); if(now - lastT < 400) return; lastT = now;
+    if(!bag.length){
+      bag = nopes.slice();
+      for(var a = bag.length - 1; a > 0; a--){ var j = Math.floor(Math.random()*(a + 1)), t = bag[a]; bag[a] = bag[j]; bag[j] = t; }
+      if(bag[bag.length - 1] === lastQ) bag.unshift(bag.pop());
+    }
+    lastQ = bag.pop(); msg.textContent = lastQ;
+  }
+  var px = -999, py = -999, curX = 0, curY = 0;
+  function hop(){
+    var r = no.getBoundingClientRect(), baseL = r.left - curX, baseT = r.top - curY;
+    var yr = document.getElementById("yes").getBoundingClientRect();
+    var vw = window.innerWidth, m = 12, bw = r.width, bh = r.height, good = [], any = [];
+    for(var t = 0; t < 60; t++){
+      var tl = baseL + (Math.random()*2 - 1)*360, tt = baseT - 12 + Math.random()*16;
+      if(tl < m || tl + bw > vw - m) continue;
+      if(tl < yr.right + 10 && tl + bw > yr.left - 10 && tt < yr.bottom + 10 && tt + bh > yr.top - 10) continue;
+      if(px >= tl - 6 && px <= tl + bw + 6 && py >= tt - 6 && py <= tt + bh + 6) continue;
+      (Math.abs(tl - r.left) > bw + 10 ? good : any).push({x:tl, y:tt});
+    }
+    var c;
+    if(good.length){ c = good[Math.floor(Math.random()*good.length)]; }
+    else if(any.length){ any.sort(function(a, b){ return Math.abs(b.x - r.left) - Math.abs(a.x - r.left); }); c = any[0]; }
+    else { return; }
+    curX = c.x - baseL; curY = c.y - baseT;
+    no.style.transform = "translate(" + Math.round(curX) + "px," + Math.round(curY) + "px)";
+  }
+  function hopOld(){
+    var r = no.getBoundingClientRect(), baseL = r.left - curX, baseT = r.top - curY;
+    var yr = document.getElementById("yes").getBoundingClientRect();
+    var vw = window.innerWidth, vh = window.innerHeight, m = 12, topMin = 64;
+    var bw = r.width, bh = r.height, best = null, bestScore = -1;
+    for(var t = 0; t < 50; t++){
+      var tx = m + Math.random()*Math.max(1, vw - bw - 2*m), ty = topMin + Math.random()*Math.max(1, vh - bh - topMin - m);
+      if(tx < yr.right + 12 && tx + bw > yr.left - 12 && ty < yr.bottom + 12 && ty + bh > yr.top - 12) continue;
+      var dp = Math.hypot(tx + bw/2 - px, ty + bh/2 - py), dc = Math.hypot(tx - r.left, ty - r.top);
+      if(dp > 240 && dc > 220){ best = {x:tx, y:ty}; break; }
+      var sc = Math.min(dp, dc);
+      if(sc > bestScore){ bestScore = sc; best = {x:tx, y:ty}; }
+    }
+    if(!best) return;
+    curX = best.x - baseL; curY = best.y - baseT;
+    no.style.transform = "translate(" + Math.round(curX) + "px," + Math.round(curY) + "px)";
+  }
+  function dodge(){
+    hop();
+    quip();
+  }
+  no.addEventListener("pointerenter", function(e){ px = e.clientX; py = e.clientY; dodge(); });
+  no.addEventListener("pointerdown", function(e){ px = e.clientX; py = e.clientY; dodge(); });
+  no.addEventListener("touchstart", function(e){ e.preventDefault(); var tc = e.touches[0]; if(tc){ px = tc.clientX; py = tc.clientY; } dodge(); }, {passive:false});
+  no.addEventListener("click", quip);
+
+  /* accept: swap scenes in place, celebrate */
+  var toast = document.getElementById("toast");
+  document.getElementById("yes").addEventListener("click", function(){
+    happy = true; eyes.style.translate = "0 0"; face.className = "robo happy";
+    rw.classList.remove("small");
+    if(!reduce) face.style.animation = "jump .9s ease, float 5s ease-in-out .9s infinite";
+    go(s2, s3);
+    toast.classList.add("show");
+    setTimeout(function(){ toast.classList.remove("show"); }, 3400);
+    if(!reduce){ burst(30); setTimeout(function(){ burst(24); }, 700); setTimeout(function(){ burst(20); }, 1500); }
+  });
+
+  var sendBtn = document.getElementById("send"); if(sendBtn) sendBtn.addEventListener("click", function(){
+    var note = document.getElementById("note").value.trim();
+    note = note.charAt(0).toUpperCase() + note.slice(1);
+    var text = "Mission accepted." + (note ? " Note: " + note : "");
+    
+    
+    
+    window.location.href = "sms:" + PHONE + "&body=" + encodeURIComponent(text);
+  });
+})();
+</script>
+</body>
+</html>
