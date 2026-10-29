@@ -46,6 +46,8 @@ main{max-width:460px;margin:0 auto;padding:30px 20px 24px;position:relative;z-in
 .g1{width:150px;top:-40px;left:-44px}
 .g2{width:100px;bottom:16%;right:-34px;animation-direction:reverse}
 @keyframes spin{to{transform:rotate(360deg)}}
+.note{position:absolute;bottom:-40px;color:var(--teal);opacity:0;animation:noteup 26s linear infinite;user-select:none}
+@keyframes noteup{0%{transform:translate(0,0) rotate(-8deg);opacity:0}10%{opacity:.09}50%{transform:translate(18px,-55vh) rotate(8deg)}90%{opacity:.09}100%{transform:translate(-10px,-115vh) rotate(-6deg);opacity:0}}
 .mini{position:absolute;width:44px;color:var(--teal);opacity:.3;animation:bob 6s ease-in-out infinite}
 .b1{left:3%;top:62%}
 .b2{right:4%;top:24%;animation-delay:-3s}
@@ -145,13 +147,22 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
 .count .num{font-family:"Chakra Petch",system-ui,sans-serif;font-size:56px;line-height:1;color:var(--fly);text-shadow:0 0 18px rgba(232,255,112,.5);min-width:66px;text-align:center}
 .count .lbl{font-family:"Chakra Petch",system-ui,sans-serif;font-size:19px}
 .count small{display:block;color:var(--dim);font-size:13px}
+.count{align-self:stretch}
+.further{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;font-size:14px;color:var(--dim);border:1px dashed var(--line);border-radius:14px;padding:12px 16px}
+.further i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--fly);animation:ping2 1.8s ease-out infinite}
 #updates .updc + .updc{margin-top:10px}
+@media (min-width:980px){
+  #s4.on{grid-template-columns:repeat(3,minmax(0,1fr))}
+  #pTrack{grid-column:1;grid-row:3}
+  #pReady{grid-column:2;grid-row:3}
+  #u2{grid-column:3;grid-row:3}
+}
 #page.dash{max-width:1080px}
 #s4.on{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;align-items:stretch}
 #s4 > .mc{grid-column:1/-1;justify-self:center;margin:0 0 4px}
 #s4 > :not(.mc){margin:0!important}
-#updates{display:flex;flex-direction:column;gap:10px}
-#updates .updc{flex:1 1 auto;margin:0!important}
+#updates{display:contents}
+#updates .updc{margin:0!important}
 .ph{margin:0 0 12px;font-family:"Chakra Petch",system-ui,sans-serif;font-size:17px;color:var(--teal)}
 .track{list-style:none;margin:0;padding:0}
 .track li{display:flex;gap:14px;align-items:flex-start;padding:0 0 16px;position:relative}
@@ -174,6 +185,7 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
 .chk .bx{flex:none;width:20px;height:20px;border-radius:6px;border:2px solid var(--line);display:grid;place-items:center;color:transparent;font-size:14px;line-height:1;transition:all .2s}
 .chk[aria-pressed="true"]{border-color:var(--teal);background:rgba(67,224,200,.08)}
 .chk[aria-pressed="true"] .bx{background:var(--teal);border-color:var(--teal);color:#06241f}
+.chk.fixed{cursor:default}
 .chk.lock{opacity:.65;cursor:default}
 .chk.lock .tx{filter:blur(4px)}
 .chk.lock .bx{color:inherit;font-size:12px}
@@ -261,9 +273,11 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
         <div class="row"><dt>Clearance</dt><dd>Just us</dd></div>
         <div class="row"><dt>Timing</dt><dd>Details to follow</dd></div>
       </dl></div>
-      <div id="updates"><div class="uniform updc stamp" style="--i:2"><b>Mission update #1</b>Category confirmed: Entertainment.<br>Humans either/or Robots may be involved. Uniform regulations remain in effect.<br>Further updates will be transmitted soon.</div></div>
-      <div class="panel rv" style="--i:4;padding:16px 18px;margin-top:14px"><p class="ph">Mission progress</p><ul class="track" id="track"></ul></div>
-      <div class="panel rv" style="--i:5;padding:16px 18px"><p class="ph">Readiness checklist</p><ul class="ready" id="ready"></ul><p class="rc" id="rc"></p></div>
+      <div id="updates"><div class="uniform updc stamp" style="--i:2"><b>Mission update #1</b>Category confirmed: Entertainment.<br>Humans either/or Robots may be involved. Uniform regulations remain in effect.</div>
+      <div class="uniform updc stamp" id="u2" style="--i:3"><b>Mission update #2</b>Mission briefing: Unlocked.<br>Saturday will have two phases: Daytime and Evening.<br>Daytime: Fuel stop and something sweet.<br>Evening: Classified (But maybe a happy ending!!?...Let’s see)<br>Please clear your schedule. Plans with the couch are officially cancelled. Grumpiness will be handled on site.</div></div>
+      <div class="further rv" id="further" style="--i:4"><i></i>Further updates will be transmitted soon.</div>
+      <div class="panel rv" id="pTrack" style="--i:4;padding:16px 18px;margin-top:14px"><p class="ph">Mission progress</p><ul class="track" id="track"></ul></div>
+      <div class="panel rv" id="pReady" style="--i:5;padding:16px 18px"><p class="ph">Readiness checklist</p><ul class="ready" id="ready"></ul><p class="rc" id="rc"></p></div>
     </section>
 
     <section class="scene" id="s3">
@@ -290,7 +304,7 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
 
   /* returning visitors skip straight to the updates */
   var returning = false;
-  try{ if(/reset/.test(window.location.search)){ localStorage.removeItem("mission"); localStorage.removeItem("ready"); } returning = localStorage.getItem("mission") === "accepted"; }catch(e){}
+  try{ if(/reset/.test(window.location.search)){ localStorage.removeItem("mission"); localStorage.removeItem("ready"); localStorage.removeItem("ready2"); } returning = localStorage.getItem("mission") === "accepted"; }catch(e){}
   var s4 = document.getElementById("s4");
   /* boot sequence with iris wipe */
   var lines = ["Initializing...","Scanning database...","4 years of friendship found. Roast level: critical.","Recent mission: completed with distinction.","New mission detected."];
@@ -361,6 +375,16 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
   }
   if(!reduce) requestAnimationFrame(tick);
 
+  /* faint music notes drifting in the background */
+  (function(){
+    var bgEl = document.getElementById("bg"), sym = ["\u266A","\u266B","\u266C","\u2669"];
+    for(var q = 0; q < 12; q++){
+      var nt = document.createElement("span"); nt.className = "note"; nt.textContent = sym[q % sym.length];
+      nt.style.left = (Math.random()*94) + "%"; nt.style.fontSize = (14 + Math.random()*14) + "px";
+      nt.style.animationDuration = (22 + Math.random()*16) + "s"; nt.style.animationDelay = (-Math.random()*30) + "s";
+      bgEl.appendChild(nt);
+    }
+  })();
   /* robot expressions */
   var face = document.getElementById("face"), rw = document.getElementById("rw"), eyes = document.getElementById("eyes"), happy = false;
   if(returning){ happy = true; face.className = "robo happy"; rw.classList.add("small"); }
@@ -446,10 +470,11 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
 
   /* returning dashboard */
   var days = 0, dashOn = false, mcIdx = 0, mcTimer = null, saved = [];
-  var items = [{t:"Uniform ironed and inspected"},{t:"Attitude: Grumpyyyy (adjustment pending)"},{t:"Phone on silent",lock:true},{t:"Commentary minimized",lock:true},{t:"Appetite: fully charged",lock:true}];
-  try{ saved = JSON.parse(localStorage.getItem("ready") || "[]"); }catch(e){ saved = []; }
+  var items = [{t:"Uniform ironed and inspected",pre:true},{t:"Attitude: Grumpyyyy (adjustment pending)",pre:true},{t:"Jacket: packed"},{t:"Phone on silent",lock:true},{t:"Commentary minimized",lock:true}];
+  try{ saved = JSON.parse(localStorage.getItem("ready2") || "[]"); }catch(e){ saved = []; }
   if(!Array.isArray(saved)) saved = [];
   saved = saved.filter(function(ix){ return items[ix] && !items[ix].lock; });
+  items.forEach(function(it, k){ if(it.pre && saved.indexOf(k) === -1) saved.push(k); });
   function daysLeft(){
     var n = new Date(), t0 = new Date(n.getFullYear(), n.getMonth(), n.getDate()), tg = new Date(2026, 9, 31);
     return Math.round((tg - t0)/86400000);
@@ -508,7 +533,7 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
     var names = ["Mission Details","Mission Accepted","Category Confirmed","Mission briefing","Lift-off"];
     var nUp = document.querySelectorAll(".updc").length, done = days <= 0 ? 5 : Math.min(5, 2 + nUp);
     document.getElementById("track").innerHTML = names.map(function(nm, k){
-      var cls = k < done ? "done" : (k === done ? "nxt" : "enc"), st = k < done ? "Unlocked" : (k === done ? "Incoming" : "Encrypted");
+      var isNext = (k === done && k < 4), cls = k < done ? "done" : (isNext ? "nxt" : "enc"), st = k < done ? "Unlocked" : (isNext ? "Incoming" : "Encrypted");
       return '<li class="' + cls + '"><i class="pt">' + (k < done ? '\uD83D\uDD13' : '') + '</i><div><span class="nm">' + nm + '</span><span class="st">' + st + '</span></div></li>';
     }).join("");
 
@@ -516,13 +541,13 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
     function count(){ rc.textContent = allDone() ? "All systems ready." : saved.length + " of " + openCount() + " systems ready" + (hasLocked() ? ". More incoming." : "."); }
     items.forEach(function(it, k){ var t = it.t;
       var li = document.createElement("li"), b = document.createElement("button");
-      b.type = "button"; b.className = "chk" + (it.lock ? " lock" : ""); b.setAttribute("aria-pressed", saved.indexOf(k) > -1 ? "true" : "false"); if(it.lock){ b.disabled = true; }
+      b.type = "button"; b.className = "chk" + (it.lock ? " lock" : ""); b.setAttribute("aria-pressed", saved.indexOf(k) > -1 ? "true" : "false"); if(it.lock){ b.disabled = true; } if(it.pre){ b.className += " fixed"; }
       b.innerHTML = '<span class="bx">' + (it.lock ? '\uD83D\uDD12' : '\u2713') + '</span><span class="tx"></span>'; b.lastChild.textContent = t;
       b.addEventListener("click", function(){
-        var at = saved.indexOf(k);
+        if(it.pre) return; var at = saved.indexOf(k);
         if(at > -1) saved.splice(at, 1); else saved.push(k);
         b.setAttribute("aria-pressed", at > -1 ? "false" : "true");
-        try{ localStorage.setItem("ready", JSON.stringify(saved)); }catch(e){}
+        try{ localStorage.setItem("ready2", JSON.stringify(saved)); }catch(e){}
         count(); mcIdx = 0; cycle();
         if(at === -1 && openDone()) celebrate();
       });
