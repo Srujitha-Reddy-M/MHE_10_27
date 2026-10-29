@@ -132,6 +132,54 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
 @keyframes glow2{50%{text-shadow:0 0 4px rgba(232,255,112,.4),0 0 8px rgba(232,255,112,.2)}}
 #toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);z-index:8;transform:translate(-50%,-160%);background:var(--fly);color:#1b2600;font:700 15px "Chakra Petch",system-ui,sans-serif;padding:12px 20px;border-radius:999px;box-shadow:0 8px 30px rgba(232,255,112,.35);transition:transform .55s cubic-bezier(.2,1.5,.4,1);white-space:nowrap}
 #toast.show{transform:translate(-50%,0)}
+.uh{margin:0 0 6px;display:flex;align-items:center;gap:10px;font-family:"Chakra Petch",system-ui,sans-serif;font-size:17px;color:var(--teal)}
+.uh i{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:ping 1.8s ease-out infinite}
+.upd{border-left:3px solid var(--teal);padding:2px 0 2px 12px;margin-top:12px;font-size:14px}
+.upd b{display:block;font-family:"Chakra Petch",system-ui,sans-serif;font-size:15px;color:var(--fly);margin-bottom:2px}
+.mc{display:flex;align-items:center;gap:10px;justify-content:center;margin:2px auto 16px;padding:9px 16px;border:1px solid var(--line);border-radius:999px;background:var(--panel);font-size:13px;width:fit-content;max-width:100%}
+.mc i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--teal);animation:ping 1.8s ease-out infinite}
+.mc b{color:var(--teal);font-weight:400}
+#mcText::after{content:"";display:inline-block;width:7px;height:13px;background:var(--fly);margin-left:3px;vertical-align:-2px;animation:blinkc 1s steps(2) infinite}
+@keyframes blinkc{50%{opacity:0}}
+.count{display:flex;align-items:center;gap:16px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 18px;margin-bottom:14px}
+.count .num{font-family:"Chakra Petch",system-ui,sans-serif;font-size:56px;line-height:1;color:var(--fly);text-shadow:0 0 18px rgba(232,255,112,.5);min-width:66px;text-align:center}
+.count .lbl{font-family:"Chakra Petch",system-ui,sans-serif;font-size:19px}
+.count small{display:block;color:var(--dim);font-size:13px}
+#updates .updc + .updc{margin-top:10px}
+#page.dash{max-width:1080px}
+#s4.on{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;align-items:stretch}
+#s4 > .mc{grid-column:1/-1;justify-self:center;margin:0 0 4px}
+#s4 > :not(.mc){margin:0!important}
+#updates{display:flex;flex-direction:column;gap:10px}
+#updates .updc{flex:1 1 auto;margin:0!important}
+.ph{margin:0 0 12px;font-family:"Chakra Petch",system-ui,sans-serif;font-size:17px;color:var(--teal)}
+.track{list-style:none;margin:0;padding:0}
+.track li{display:flex;gap:14px;align-items:flex-start;padding:0 0 16px;position:relative}
+.track li::before{content:"";position:absolute;left:8px;top:20px;bottom:0;width:2px;background:var(--line)}
+.track li:last-child{padding-bottom:0}
+.track li:last-child::before{display:none}
+.track .pt{flex:none;width:18px;height:18px;border-radius:50%;border:2px solid var(--line);background:var(--bg);margin-top:2px}
+.track .done .pt{background:none;border:0;box-shadow:none;font-size:15px;line-height:18px;text-align:center;font-style:normal;margin-top:1px}
+.track .done::before{background:var(--teal)}
+.track .nxt .pt{border-color:var(--fly);animation:ping2 1.8s ease-out infinite}
+@keyframes ping2{0%{box-shadow:0 0 0 0 rgba(232,255,112,.55)}100%{box-shadow:0 0 0 12px rgba(232,255,112,0)}}
+.track .nm{display:block;font-family:"Chakra Petch",system-ui,sans-serif;font-size:16px}
+.track .st{display:block;font-size:12px;color:var(--dim)}
+.track .done .st{color:var(--teal)}
+.track .nxt .st{color:var(--fly)}
+.track .enc .nm{color:var(--dim);filter:blur(3px)}
+.ready{list-style:none;margin:0;padding:0}
+.ready li{margin-bottom:8px}
+.chk{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;font-size:14px;color:var(--text);background:transparent;border:1px solid var(--line);border-radius:10px;padding:11px 12px;cursor:pointer;transition:border-color .2s,background .2s}
+.chk .bx{flex:none;width:20px;height:20px;border-radius:6px;border:2px solid var(--line);display:grid;place-items:center;color:transparent;font-size:14px;line-height:1;transition:all .2s}
+.chk[aria-pressed="true"]{border-color:var(--teal);background:rgba(67,224,200,.08)}
+.chk[aria-pressed="true"] .bx{background:var(--teal);border-color:var(--teal);color:#06241f}
+.chk.lock{opacity:.65;cursor:default}
+.chk.lock .tx{filter:blur(4px)}
+.chk.lock .bx{color:inherit;font-size:12px}
+.rc{margin:10px 0 0;font-size:13px;color:var(--dim);text-align:center}
+.updc{border-left-color:var(--teal)}
+.updc b{color:var(--teal)}
 .secure{margin:0;text-align:center;font-size:15px;line-height:1.55}
 .secure .dot{display:block;width:10px;height:10px;border-radius:50%;background:var(--teal);margin:0 auto 12px;animation:ping 1.8s ease-out infinite}
 @keyframes ping{0%{box-shadow:0 0 0 0 rgba(67,224,200,.6)}100%{box-shadow:0 0 0 14px rgba(67,224,200,0)}}
@@ -204,10 +252,24 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
       </div>
     </section>
 
+    <section class="scene" id="s4">
+      <div class="mc rv" style="--i:0"><i></i><span><b>Mission Control:</b> <span id="mcText"></span></span></div>
+      <div class="count rv" style="--i:1"><div class="num" id="dayNum">0</div><div><div class="lbl" id="dayLbl">Days to lift-off</div><small>Saturday, Oct 31</small></div></div>
+      <div class="panel rv" style="--i:0"><dl>
+        <div class="row"><dt>Date</dt><dd>Saturday, Oct 31</dd></div>
+        <div class="row"><dt>Location</dt><dd>[Redacted]</dd></div>
+        <div class="row"><dt>Clearance</dt><dd>Just us</dd></div>
+        <div class="row"><dt>Timing</dt><dd>Details to follow</dd></div>
+      </dl></div>
+      <div id="updates"><div class="uniform updc stamp" style="--i:2"><b>Mission update #1</b>Category confirmed: Entertainment.<br>Humans either/or Robots may be involved. Uniform regulations remain in effect.<br>Further updates will be transmitted soon.</div></div>
+      <div class="panel rv" style="--i:4;padding:16px 18px;margin-top:14px"><p class="ph">Mission progress</p><ul class="track" id="track"></ul></div>
+      <div class="panel rv" style="--i:5;padding:16px 18px"><p class="ph">Readiness checklist</p><ul class="ready" id="ready"></ul><p class="rc" id="rc"></p></div>
+    </section>
+
     <section class="scene" id="s3">
       <h1 class="rv" style="--i:0">Mission accepted, Grumpyyyy!</h1>
       <p class="sub rv" style="--i:1">Agents deployed. Preparations underway. Further updates will be transmitted soon.</p>
-      <div class="panel rv" style="--i:2;padding:18px">
+      <div class="panel rv" style="--i:3;padding:18px">
         <p class="secure"><i class="dot"></i>Have something to say before take off or any notes for Mission Control? Use the secure channel on your device for communication.</p>
         
         
@@ -216,7 +278,7 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
     </section>
   </div>
 
-  <p class="foot rv">Enough butterflies, now it’s time for my <span class="glow">fireflies</span> to shine.</p>
+  
 </main>
 
 <script>
@@ -226,6 +288,10 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
   var page = document.getElementById("page");
   var s1 = document.getElementById("s1"), s2 = document.getElementById("s2"), s3 = document.getElementById("s3");
 
+  /* returning visitors skip straight to the updates */
+  var returning = false;
+  try{ if(/reset/.test(window.location.search)){ localStorage.removeItem("mission"); localStorage.removeItem("ready"); } returning = localStorage.getItem("mission") === "accepted"; }catch(e){}
+  var s4 = document.getElementById("s4");
   /* boot sequence with iris wipe */
   var lines = ["Initializing...","Scanning database...","4 years of friendship found. Roast level: critical.","Recent mission: completed with distinction.","New mission detected."];
   var box = document.getElementById("bootlines"), boot = document.getElementById("boot"), i = 0, opened = false;
@@ -233,6 +299,7 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
     if(opened) return; opened = true; boot.classList.add("off");
     setTimeout(function(){ page.classList.add("in"); s1.classList.add("on"); }, 350);
   }
+  if(returning){ opened = true; boot.style.display = "none"; page.classList.add("in"); page.classList.add("dash"); s4.classList.add("on"); setTimeout(startDash, 700); }
   function next(){
     if(i >= lines.length){ setTimeout(open, 1600); return; }
     var p = document.createElement("p"); p.textContent = "> " + lines[i++]; box.appendChild(p);
@@ -296,6 +363,7 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
 
   /* robot expressions */
   var face = document.getElementById("face"), rw = document.getElementById("rw"), eyes = document.getElementById("eyes"), happy = false;
+  if(returning){ happy = true; face.className = "robo happy"; rw.classList.add("small"); }
   var moods = ["curious","wink","","curious","",""];
   function setMood(m){ if(!happy) face.className = "robo " + m; }
   setInterval(function(){ setMood(moods[Math.floor(Math.random()*moods.length)]); }, 2600);
@@ -376,10 +444,101 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
   no.addEventListener("touchstart", function(e){ e.preventDefault(); var tc = e.touches[0]; if(tc){ px = tc.clientX; py = tc.clientY; } dodge(); }, {passive:false});
   no.addEventListener("click", quip);
 
+  /* returning dashboard */
+  var days = 0, dashOn = false, mcIdx = 0, mcTimer = null, saved = [];
+  var items = [{t:"Uniform ironed and inspected"},{t:"Attitude: Grumpyyyy (adjustment pending)"},{t:"Phone on silent",lock:true},{t:"Commentary minimized",lock:true},{t:"Appetite: fully charged",lock:true}];
+  try{ saved = JSON.parse(localStorage.getItem("ready") || "[]"); }catch(e){ saved = []; }
+  if(!Array.isArray(saved)) saved = [];
+  saved = saved.filter(function(ix){ return items[ix] && !items[ix].lock; });
+  function daysLeft(){
+    var n = new Date(), t0 = new Date(n.getFullYear(), n.getMonth(), n.getDate()), tg = new Date(2026, 9, 31);
+    return Math.round((tg - t0)/86400000);
+  }
+  function decode(el){
+    var nodes = [], total = 0, pos = 0, glyphs = "01#%&@*+=<>?/";
+    for(var q = 0; q < el.childNodes.length; q++){ var nd = el.childNodes[q]; if(nd.nodeType === 3){ nodes.push({n:nd, t:nd.nodeValue}); total += nd.nodeValue.length; } }
+    function frame(){
+      var left = pos;
+      nodes.forEach(function(o){
+        var out = "";
+        for(var z = 0; z < o.t.length; z++){ var ch = o.t.charAt(z); if(left > 0){ out += ch; left--; } else { out += (ch === " " ? " " : glyphs.charAt(Math.floor(Math.random()*glyphs.length))); } }
+        o.n.nodeValue = out;
+      });
+      if(pos >= total){ clearInterval(iv); nodes.forEach(function(o){ o.n.nodeValue = o.t; }); }
+      pos += Math.ceil(total/26);
+    }
+    var iv = setInterval(frame, 45); frame();
+  }
+  function openCount(){ return items.filter(function(it){ return !it.lock; }).length; }
+  function hasLocked(){ return items.some(function(it){ return it.lock; }); }
+  function openDone(){ return items.every(function(it, k){ return it.lock || saved.indexOf(k) > -1; }); }
+  function allDone(){ return !hasLocked() && openDone(); }
+  function readyPct(){ return Math.round(saved.length/openCount()*100); }
+  function mcLines(){
+    if(allDone()) return ["All systems ready. Standing by for lift-off."];
+    if(days < 0) return ["Mission accomplished. Well done, Grumpyyyy."];
+    if(days === 0) return ["Lift-off is today. Good luck, Grumpyyyy.","All hands on deck."];
+    if(days === 1) return ["Lift-off is tomorrow. Systems warming up.","Final checks underway."];
+    if(openDone()) return ["Initial checks complete. More systems unlocking soon.","Standing by."];
+    return ["Standing by.","Preparations underway.","Readiness at " + readyPct() + "%.","Monitoring the situation.","Fireflies charging."];
+  }
+  function typeMC(text){
+    clearInterval(mcTimer); var k = 0; mcEl.textContent = "";
+    if(reduce){ mcEl.textContent = text; return; }
+    mcTimer = setInterval(function(){ mcEl.textContent = text.slice(0, ++k); if(k >= text.length) clearInterval(mcTimer); }, 28);
+  }
+  var mcEl = document.getElementById("mcText");
+  function cycle(){ var L = mcLines(); typeMC(L[mcIdx++ % L.length]); }
+  function celebrate(){
+    if(reduce) return;
+    face.style.animation = "none"; void face.offsetWidth;
+    face.style.animation = "jump .9s ease, float 5s ease-in-out .9s infinite";
+    var r = face.getBoundingClientRect(); burst(26, r.left + r.width/2, r.top + 40); burst(18);
+  }
+  function startDash(){
+    if(dashOn) return; dashOn = true;
+    days = daysLeft();
+    var dn = document.getElementById("dayNum"), dl = document.getElementById("dayLbl");
+    dl.textContent = days > 1 ? "Days to lift-off" : days === 1 ? "Day to lift-off" : days === 0 ? "Lift-off is today" : "Mission complete";
+    if(days > 0){
+      if(reduce){ dn.textContent = days; }
+      else { var c = 0, step = Math.max(1, Math.ceil(days/12)); dn.textContent = "0"; var cd = setInterval(function(){ c = Math.min(days, c + step); dn.textContent = c; if(c >= days) clearInterval(cd); }, 160); }
+    } else { dn.textContent = days === 0 ? "0" : "\u2713"; }
+
+    var names = ["Mission Details","Mission Accepted","Category Confirmed","Mission briefing","Lift-off"];
+    var nUp = document.querySelectorAll(".updc").length, done = days <= 0 ? 5 : Math.min(5, 2 + nUp);
+    document.getElementById("track").innerHTML = names.map(function(nm, k){
+      var cls = k < done ? "done" : (k === done ? "nxt" : "enc"), st = k < done ? "Unlocked" : (k === done ? "Incoming" : "Encrypted");
+      return '<li class="' + cls + '"><i class="pt">' + (k < done ? '\uD83D\uDD13' : '') + '</i><div><span class="nm">' + nm + '</span><span class="st">' + st + '</span></div></li>';
+    }).join("");
+
+    var ul = document.getElementById("ready"), rc = document.getElementById("rc");
+    function count(){ rc.textContent = allDone() ? "All systems ready." : saved.length + " of " + openCount() + " systems ready" + (hasLocked() ? ". More incoming." : "."); }
+    items.forEach(function(it, k){ var t = it.t;
+      var li = document.createElement("li"), b = document.createElement("button");
+      b.type = "button"; b.className = "chk" + (it.lock ? " lock" : ""); b.setAttribute("aria-pressed", saved.indexOf(k) > -1 ? "true" : "false"); if(it.lock){ b.disabled = true; }
+      b.innerHTML = '<span class="bx">' + (it.lock ? '\uD83D\uDD12' : '\u2713') + '</span><span class="tx"></span>'; b.lastChild.textContent = t;
+      b.addEventListener("click", function(){
+        var at = saved.indexOf(k);
+        if(at > -1) saved.splice(at, 1); else saved.push(k);
+        b.setAttribute("aria-pressed", at > -1 ? "false" : "true");
+        try{ localStorage.setItem("ready", JSON.stringify(saved)); }catch(e){}
+        count(); mcIdx = 0; cycle();
+        if(at === -1 && openDone()) celebrate();
+      });
+      li.appendChild(b); ul.appendChild(li);
+    });
+    count();
+
+    if(!reduce) document.querySelectorAll(".updc").forEach(function(el, k){ setTimeout(function(){ decode(el); }, k*450); });
+    cycle(); setInterval(cycle, 5200);
+  }
+
   /* accept: swap scenes in place, celebrate */
   var toast = document.getElementById("toast");
   document.getElementById("yes").addEventListener("click", function(){
     happy = true; eyes.style.translate = "0 0"; face.className = "robo happy";
+    try{ localStorage.setItem("mission", "accepted"); }catch(e){}
     rw.classList.remove("small");
     if(!reduce) face.style.animation = "jump .9s ease, float 5s ease-in-out .9s infinite";
     go(s2, s3);
