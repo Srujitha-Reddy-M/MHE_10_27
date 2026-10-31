@@ -163,6 +163,7 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
 #s4 > :not(.mc){margin:0!important}
 #updates{display:contents}
 #updates .updc{margin:0!important}
+#u3{grid-column:1/-1}
 .ph{margin:0 0 12px;font-family:"Chakra Petch",system-ui,sans-serif;font-size:17px;color:var(--teal)}
 .track{list-style:none;margin:0;padding:0}
 .track li{display:flex;gap:14px;align-items:flex-start;padding:0 0 16px;position:relative}
@@ -271,11 +272,12 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
         <div class="row"><dt>Date</dt><dd>Saturday, Oct 31</dd></div>
         <div class="row"><dt>Location</dt><dd>[Redacted]</dd></div>
         <div class="row"><dt>Clearance</dt><dd>Just us</dd></div>
-        <div class="row"><dt>Timing</dt><dd>Details to follow</dd></div>
+        <div class="row"><dt>Timing</dt><dd>10:00 AM</dd></div>
       </dl></div>
       <div id="updates"><div class="uniform updc stamp" style="--i:2"><b>Mission update #1</b>Category confirmed: Entertainment.<br>Humans either/or Robots may be involved. Uniform regulations remain in effect.</div>
-      <div class="uniform updc stamp" id="u2" style="--i:3"><b>Mission update #2</b>Mission briefing: Unlocked.<br>Saturday will have two phases: Daytime and Evening.<br>Daytime: Fuel stop and something sweet.<br>Evening: Classified (But maybe a happy ending!!?...Let’s see)<br>Please clear your schedule. Plans with the couch are officially cancelled. Grumpiness will be handled on site.</div></div>
-      <div class="further rv" id="further" style="--i:4"><i></i>Further updates will be transmitted soon.</div>
+      <div class="uniform updc stamp" id="u2" style="--i:3"><b>Mission update #2</b>Mission briefing: Unlocked.<br>Saturday will have two phases: Daytime and Evening.<br>Daytime: Fuel stop and something sweet.<br>Evening: Classified (But maybe a happy ending!!?...Let’s see)<br>Please clear your schedule. Plans with the couch are officially cancelled. Grumpiness will be handled on site.</div>
+      <div class="uniform updc stamp" id="u3" style="--i:4"><b>Mission update #3</b>Lift-off: Unlocked.<br>Rendezvous: Saturday, 10:00 AM.<br>Daytime coordinates: Midtown Detroit.<br>Evening coordinates: Still classified.<br>Patience: Unlimited, Emotions: Packed.<br>Mission Control wishes you safe travels.</div></div>
+      <div class="further rv" id="further" style="--i:4"><i></i>Final transmission complete. See you on Saturday.</div>
       <div class="panel rv" id="pTrack" style="--i:4;padding:16px 18px;margin-top:14px"><p class="ph">Mission progress</p><ul class="track" id="track"></ul></div>
       <div class="panel rv" id="pReady" style="--i:5;padding:16px 18px"><p class="ph">Readiness checklist</p><ul class="ready" id="ready"></ul><p class="rc" id="rc"></p></div>
     </section>
@@ -470,7 +472,7 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
 
   /* returning dashboard */
   var days = 0, dashOn = false, mcIdx = 0, mcTimer = null, saved = [];
-  var items = [{t:"Uniform ironed and inspected",pre:true},{t:"Attitude: Grumpyyyy (adjustment pending)",pre:true},{t:"Jacket: packed"},{t:"Phone on silent",lock:true},{t:"Commentary minimized",lock:true}];
+  var items = [{t:"Uniform ironed and inspected",pre:true},{t:"Attitude: Grumpyyyy (adjustment pending)",pre:true},{t:"Jacket: packed",pre:true},{t:"Phone on silent"},{t:"Commentary minimized"}];
   try{ saved = JSON.parse(localStorage.getItem("ready2") || "[]"); }catch(e){ saved = []; }
   if(!Array.isArray(saved)) saved = [];
   saved = saved.filter(function(ix){ return items[ix] && !items[ix].lock; });
